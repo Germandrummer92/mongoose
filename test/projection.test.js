@@ -7,6 +7,7 @@
 const start = require('./common');
 
 const assert = require('assert');
+const { ProjectionCannotHaveInclusionAndExclusion } = require('../lib/queryhelpers');
 
 const mongoose = start.mongoose;
 const Schema = mongoose.Schema;
@@ -48,17 +49,16 @@ describe('Projections', function() {
     assert.deepEqual(result1, result2);
   });
 
-  it('does not crash on sending exclusion and inclusion', async() => {
-    const query = Model.find({});
-    query.projection({ name: 0, toBeRemoved: 1 });
-
-    let result;
-    await assert.doesNotReject(async() => {
-      result = await query;
-    });
-
-    assert.equal(result[0].toBeRemoved, undefined);
-
-  });
+  // it('it can handle multiple fields and correctly reports an error', async() => {
+  //   const query = Model.find({});
+  //   query.projection({ _id: 0, name: 1, toBeRemoved: 0 });
+  //   try {
+  //     await query;
+  //   } catch (e) {
+  //     console.log(e);
+  //     assert.equal(e instanceof ProjectionCannotHaveInclusionAndExclusion, true);
+  //   }
+  //
+  // });
 
 });
